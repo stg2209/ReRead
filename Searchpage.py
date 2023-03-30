@@ -54,23 +54,44 @@ search_bar.pack(side="left")
 search_button = tk.Button(search_frame, text="Search", font=("papyrus", 16))
 search_button.pack(side="left", padx=5)
 
+# create a clear button and pack it to the left with double font size
+clear_button = tk.Button(search_frame, text="Clear", font=("papyrus", 16))
+clear_button.pack(side="left", padx=5)
+
 # create a list to hold the result labels and text widgets
 result_labels = []
 results_text_widgets = []
 blank_labels = []
 
 # retrieve the data
-data = ["Kumbhojkar", "kumbhojkar", "OS Notes", "COA Slides", "Computer Network PPt"]
+data = ["Kumbhojkar", "kumbhojkar", "OS Notes","os notes", "COA Slides", "Computer Network PPt"]
+
+# create a function to open a new window
+# def open_new_window():
+#     new_window = tk.Toplevel(search_window)
+#     new_window.title("New Window")
+#     new_window.geometry("900x600")
+#     new_window.configure(bg="Yellow")
+
+#     # create a label widget in the new window
+#     message_label = tk.Label(new_window, text="You clicked the image!", font=("papyrus", 16))
+#     message_label.pack()
+
+def clear_results():
+    # clear the previous search results
+    for label in result_labels:
+        label.destroy()
+    # for widget in results_text_widgets:
+    #     widget.destroy()
+    # for label in blank_labels:
+    #     label.destroy()
+    # blank_labels.clear()
+        
 
 # implement search functionality
 def search():
     # clear the previous search results
-    for label in result_labels:
-        label.destroy()
-    for widget in results_text_widgets:
-        widget.destroy()
-    for label in blank_labels:
-        label.destroy()
+    clear_results()
 
     # create new result labels and text widgets for the search results
     search_term = search_bar.get().lower()
@@ -82,12 +103,7 @@ def search():
             found = True
     if found:
         for result in results:
-            
-
-            # create a blank label for spacing
-            blank_label = tk.Label(search_window, height=5)
-            blank_label.pack()
-
+    
             # create an image label widget with height 5 and width 5
             image_label = tk.Label(search_window, height=5, width=20, bg="white")
             image_label.pack()
@@ -107,23 +123,42 @@ def search():
             selected_year_label.pack()
             selected_book_label.pack()
             selected_subject_label.pack()
-            # # create a text widget for displaying the search results with the same font size as the result label
-            # result_label.update()
+
+            # create a text widget for displaying the search results with the same font size as the result label
             # results_text = tk.Text(search_window, height=1, font=result_label.cget('font'))
             # results_text.configure(width=30)
             # results_text.pack()
+            # results_text.insert(tk.END, result)
             # results_text_widgets.append(results_text)
 
-            # add the blank label to the list
-            blank_labels.append(blank_label)
+            # add event binding to the image label to open a new window and display the search result data
+            image_label.bind("<Button-1>", lambda event, data=result: show_result_data(data))
 
+          
     else:
         result_label = tk.Label(search_window, text="Not found", font=("Helvetica", 16))
         result_label.pack()
         result_labels.append(result_label)
 
+# function to show the search result data in a new window
+def show_result_data(data):
+    # create a new window
+    result_window = tk.Toplevel(search_window)
+    result_window.title("Result Data")
+    result_window.geometry("900x600")
+    result_window.configure(bg="Yellow")
+
+    # create a label to display the data in the new window
+    result_label = tk.Label(result_window, text=data, font=("papyrus", 16))
+    result_label.pack()
+
+
+
 # add the search functionality to the button
 search_button.config(command=search)
+
+# add the search functionality to the button
+clear_button.config(command=clear_results)
 
 # run the application
 search_window.mainloop()        
